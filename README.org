@@ -1,0 +1,10 @@
+* My Presentations
+
+This repository is probably not much interest except to me.  Here is where I keep all my org-mode source files to
+write presentations of various sorts.
+
+The =watch.sh= script is a /zsh/ script that runs [[https://github.com/mattox-b/latex-autocompile][latex-autocompile]]
+[[https://shakebuild.com][shake]] script, which will compile any =slides.tex= into a PDF and name it according to the
+directory it is in.  The end of the directory name must be =-slides= for this to be detected.
+
+The =default.nix= installs [[https://pygments.org/][Pygments]] for syntax highlighting.

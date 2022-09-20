@@ -1,0 +1,150 @@
+#+TITLE: Files!
+#+SUBTITLE: You gotta love them.
+#+DATE: Fall 2022
+#+options: h:2
+#+COLUMNS: %45ITEM %10BEAMER_ENV(Env) %10BEAMER_ACT(Act) %4BEAMER_COL(Col)
+#+LATEX_CLASS: beamer
+#+LATEX_CLASS_OPTIONS: [aspectration=169,xcolor={x11names},presentation]
+#+LATEX_HEADER: \input{slides-header.tex}
+
+* Introduction
+
+** Pro Tip
+
+If you go to rename a file, and it ends with something like =.ipynb=, =.txt=, =.exe=, =.py=, or anything else following
+the dot, don't change that part.  The computer uses that to decide what kind of data is in the file.
+
+** Objectives
+
+- Specify the name and location of a file
+  - Name, Path, and Extension
+- Open a file in one of three modes:
+  - Reading, Writing, Appending
+- Use =read=, =readline=, and =readlines= to read data
+- Use =close= to stop using a file
+- Use lists to contain a collection of data
+
+* Files
+
+** What's in a Name?
+
+- A file is a collection of data "on disk" with a /name/ and a /location/.
+  - Example: =/home/mattox/cliffs.jpg=
+    - =/home/mattox/= is the /path/
+    - =cliffs.jpg= is the /name/
+    - =jpg= is the /extension/
+
+  - Windows Example: =C:\home\mattox\cliffs.jpg=
+
+** Reading the Data!
+
+- To use a file in [[class:sc][Python]] you need to /open/ it.
+  - This creates a "file handle".
+- There are three modes:
+  - Read, Write, Append
+
+#+begin_src python
+myfile = open('foo.txt')
+data = myfile.read()
+myfile.close()
+#+end_src
+
+** Writing Data
+
+- To write a file in [[class:sc][Python]] you /open/ it in write mode.
+  - This creates a "file handle".
+
+#+begin_src python
+myfile = open('foo.txt','w')
+myfile.write("Hello there!")
+myfile.close()
+#+end_src
+
+** Example: I didn't close my file!
+
+- What happens if you don't close your file?
+
+  #+begin_src python
+def step1():
+    myfile = open("foo.txt","w")
+    myfile.write("This is line\n")
+    myfile.write("This is another line\n")
+
+def step2():
+    myfile = open("foo.txt")
+    print(myfile.read())
+  #+end_src
+
+** A Quick Re-Introduction to Lists
+
+- Lists are a standard way of collecting data.
+  - Idea: You are probably going to do something to /each/ element, or at least most of them!
+- Use square brackets to access the elements
+#+begin_src python
+>>> primes = [2,3,5,7,9]
+>>> primes[0]
+2
+#+end_src
+
+** Indexing
+
+- Negative indices start from the end.
+- Ranges include the first element, but *not* the last.
+  - Why do you think they did it that way?
+
+#+begin_src primes
+>>> primes[-1]
+9
+>>> primes[0:3]
+[2, 3, 5]
+>>> primes[3:5]
+[7, 9]
+>>> primes.remove(9) # to restore accuracy
+#+end_src
+
+** A weird 'gotcha' with lists...
+
+- The line =x=y= doesn't create a copy, it just gives it an /alias/
+  - Kind of like a nickname
+- Use =list(x)= to really create a copy.
+#+begin_src python
+>>> x = [2,4,6,8]
+>>> y = x
+>>> x.append(10)
+>>> x
+[2, 4, 6, 8, 10]
+>>> y
+[2, 4, 6, 8, 10]
+#+end_src
+
+** Reading Data with =readlines=
+
+- We can use =split= to break data into lines.
+- Or, we can use =readlines= to get a list.
+
+#+begin_src python
+myfile = open("foo.txt")
+for row in myfile:
+    print(">",row)
+myfile.close()
+#+end_src
+
+** Your turn!
+
+Write two functions, =writeNumbers= and =averageNumbers=.
+- =writeNumbers= writes two numbers into a file.
+- =averageNumbers= reads two numbers from the file and returns their average.
+
+#+begin_src python
+> writeNumbers("test.txt",20,30)
+# Write 20 and 30 to "test.txt"
+> averageNumbers("test.txt")
+The average is 25
+#+end_src
+
+* End :noexport:
+;; Local Variables:
+;; org-export-latex-listings: 'minted
+;; #org-latex-listings: 'minted
+;; eval: (add-hook 'after-save-hook  #'org-beamer-export-to-latex nil t)
+;; End:

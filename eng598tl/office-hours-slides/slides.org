@@ -1,0 +1,156 @@
+#+TITLE: Office Hours
+#+SUBTITLE: Growing Students' Minds Without Losing Yours
+#+DATE: Fall, 2022
+#+options: h:2 toc:nil
+#+LATEX_CLASS: beamer
+#+LATEX_CLASS_OPTIONS: [aspectration=169,xcolor={x11names},presentation]
+#+LATEX_HEADER: \input{slides-header.tex}
+#+LATEX_HEADER: \usepackage[backend=biber,style=alphabetic,citestyle=alphabetic]{biblatex}
+#+LATEX_HEADER: \addbibresource{bibliography.bib}
+#+LATEX_HEADER: \setbeamertemplate{bibliography item}[text]
+
+# #+LATEX_HEADER: \setbeameroption{show notes on second screen=right} % Both
+
+* Introduction
+
+** Reminder about Tech Policy and Conversations
+
+- Do not use technological devices during class.
+- Avoid side conversations.
+
+** Opening scenario
+:PROPERTIES:
+:CUSTOM_ID: opening
+:END:
+
+It is 12:47, and just three minutes left for your office hours.  You have just
+finished explaining to a group of students how to compare the structural
+properties of oak vs pine in 15th century catapults and their geopolitical
+significance from an engineering perspective.  Just then another student comes
+in and asks if you can repeat that.  The worst thing is that you know this
+student, they work very hard in this class.  Meanwhile another student is
+holding their midterm exam and has been waiting for 30 minutes so you can
+explain why they got points taken off, and yet another student has been waiting
+and is frustrated trying to design their own catapult and says "we're out of
+time, can you just give me the answer?"
+
+- Have any of these happened to you?
+- How would you handle these things?
+
+** Objectives
+:PROPERTIES:
+:CUSTOM_ID:       objectives
+:END:
+
+- Consider the several purposes of office hours.
+- Develop a set of best practices to minimize frustration and maximize learning.
+- Consider procedures for on-line office hours.
+
+* Best Practices
+** What was it all for?!
+:PROPERTIES:
+:CUSTOM_ID:       why
+:END:
+
+# #+latex: \note[item]{If you want to do the right thing, be sure you know what you're trying to do.}
+
+
+Office hours serve many purposes: official and unofficial
+
+- Content
+  - Extra help explaining material
+  - Reviewing feedback from past assignments
+  - Clarifying course policies
+
+- Interpersonal
+  - Distressed students
+  - Life-long friendships
+
+** Some Best practices
+
+- Prepare ahead of time!
+  - Be sure you are familiar with the syllabus
+  - Review upcoming assignments, because they're going to ask!
+- Always be professional
+  - Especially with the annoying ones!
+  - You don't know the back-story.
+- Email
+  - You are not a call center operator, but do clarify expectations
+  - Use BCC instead of CC
+  - Don't send anything by email that you wouldn't post on TikTok!
+    - Freedom of Information Act (FOIA) --- Emails can be examined for legal reasons, with an important exception:
+    - Don't assume privacy.
+
+** FERPA
+- FERPA = Federal Educational Something Privacy Act
+- Student information is protected by law.
+  - Grades
+  - Disability status
+  - Disability Resources (DRES) letters - it is best not to ask for details.
+
+- Horror story: once a student took a class but dropped it.  The next semester
+ they took it again.  Upon going to office hours, the TA (trying to be friendly)
+ said "oh, you're back!"
+
+- Parents are not allowed to ask.
+
+** Mandated Reporter Responsibilities
+
+Two situations
+- Student under 18 years old facing abuse
+  - https://www.legal.uillinois.edu/services/legal_guidance/child_abuse_and_neglect_mandatory_reporting
+- Title IX (Sexual misconduct)
+  - https://wecare.illinois.edu/titleix/
+- Links will be on Canvas page.
+
+*In an emergency, call 911*
+
+** Mental Health
+
+- You may be the only one who notices.
+# - See https://humanresources.illinois.edu/assets/docs/SAC-Quick-Reference-Guide-to-Working-with-Students-of-Concern.pdf
+- See the =Quick-Reference-Guide-to-Working-with-Students-of-Concern.pdf=
+  for some resources. (On Canvas)
+
+*Again, in an emergency, call 911*
+
+** Online Office Hours
+
+ - Use breakout rooms to preserve privacy (or use the waiting room).
+ - It's best to share your video, but do *not* ask students to do so.
+ - Use a different zoom link than what you use for the class.
+ - Definitely require authentication
+ - Online office hours are likely to persist post-COVID.
+
+* Scenarios
+** Scenarios
+
+*** Scenario 1
+
+A student comes in after the latest midterm and complains that the exam was too hard.
+You assume that they just didn't study enough, but 10 more students come in and report the
+same thing.
+
+*** Scenario 2
+
+A student is struggling with an assignment and has started to become impatient.
+They want to do well in the class, but office hours is nearly over.
+One student shows you a horribly wrong answer and asks, "Is this right?"  Another asks loudly, "Did you even *do* this assignment?"
+
+*** Scenario 3
+
+A student from Nsquardia is in your office hours, along with another student from Nlognia.  The student from Nsquardia
+comments that "everybody knows that people from Nlognia are lazy."
+
+** Homework!
+
+- There is a reflection homework posted to Canvas.
+- Due in two weeks!
+- Note: these scenarios and reflections are excellent source material for interviews and teaching statements!
+  - E.g.: "tell me about a time you dealt with a difficult situation..."
+
+* End :noexport:
+;; Local Variables:
+;; org-export-latex-listings: 'minted
+;; eval: (add-hook 'after-save-hook  #'org-beamer-export-to-latex nil t)
+;; End:

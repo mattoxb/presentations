@@ -1,0 +1,321 @@
+#+TITLE: Experience Report --- Converting an Upper Level Course to Mastery Grading
+#+AUTHOR: Mattox Beckman
+#+DATE: August 15--16, 2022
+#+options: h:1 toc:nil timestamp:nil
+#+LATEX_CLASS: beamer
+#+LATEX_CLASS_OPTIONS: [aspectration=169,xcolor={x11names},presentation]
+#+LATEX_HEADER: \input{slides-header.tex}
+#+LATEX_HEADER: \usepackage[backend=biber,style=alphabetic,citestyle=alphabetic]{biblatex}
+#+LATEX_HEADER: \addbibresource{bibliography.bib}
+#+LATEX_HEADER: \setbeamertemplate{bibliography item}[text]
+#+REVEAL_TITLE_SLIDE: <h2>%t</h2><h3>ICTSW22 - %A %a</h3>
+#+REVEAL_THEME: beige
+#+REVEAL_ROOT: ..
+#+REVEAL_EXTRA_OPTIONS: hash:true, respond_to_hash_changes:true, max_scale:2.0, width:1200, height:900, center:false
+#+OPTIONS: num:nil toc:nil
+#+REVEAL_TRANS: none
+#+REVEAL_EXTRA_CSS: ../custom.css
+#+REVEAL_PLUGINS: (highlight  notes)
+#+REVEAL_HLEVEL: 1
+
+* Introduction
+:PROPERTIES:
+:ID:       eff0695f-cf4c-47d9-a30a-89cb31886387
+:END:
+
+- Me
+  - Mattox Beckman =<mattox@illinois.edu>=
+  - University of Illinois at Urbana
+  - Teaching Associate professor
+  - Computer Science
+
+- Outline
+  - What's Wrong with Point-based grading?
+  - What is Mastery Grading?
+  - How I got started down the path of Mastery Grading
+  - Case Study: CS 421
+  - Lessons Learned
+
+* The Problem with Points
+:PROPERTIES:
+:ID:       7842d097-c7e8-4a3e-8295-017e0a0b1d18
+:END:
+
+Problem 1 --- Points do not measure learning!
+
+Consider a course with 2 midterms and a final, each with 10 problems.  Four students get a B in your class.
+
+
+#+ATTR_REVEAL: :frag t
+- Student 1: Got 8/10 problems right on each midterm and on the final.
+#+ATTR_REVEAL: :frag t
+- Student 2: Missed midterm 1 but got 100% on midterm 2 and the final.
+#+ATTR_REVEAL: :frag t
+- Student 3: Got 60% partial credit on half the problems, but full credit on the rest.
+#+ATTR_REVEAL: :frag t
+- Student 4: Got full credit on the midterms but 100% on half the problems in the final due to poor internet connection.
+
+How would you characterize the learning of these students?
+- Is a B accurate for any of these students?
+
+
+* The Problem with Points, 2
+:PROPERTIES:
+:ID:       5e4ad870-ecf6-4183-b12b-0a90a669f81d
+:END:
+
+Problem 2 --- Points devalue learning
+- How do typical students prepare for a final exam?
+  - "I need to learn x,y, and z to get the grade I want?" or..
+  - "I need to score x points to get the grade I want?"
+#+ATTR_REVEAL: :frag t
+- How do typical students ask for a regrade?
+  - "I really do know this; let me show you!"
+  - "Can't I just have 2 more points on this problem?"
+#+ATTR_REVEAL: :frag t
+- How do we cover for ourselves when we mess up?
+  - "Let me give you another chance to show your knowledge."
+  - "Let me give everyone points for that messed up problem."
+
+#+ATTR_REVEAL: :frag t
+Points become the focus, a currency subject to trading and negotiation.
+
+* The Problem with Points, 3
+:PROPERTIES:
+:ID:       79d22b47-3d59-432e-9c15-eaea32f7a757
+:END:
+
+Problem 3 --- Points are inequitable
+
+#+ATTR_REVEAL: :frag t
+  * Assume a uniform distribution of student background.
+#+ATTR_REVEAL: :frag t
+  * Assume a uniform experience of students on campus.
+#+ATTR_REVEAL: :frag t
+  * Extra credit opportunities can make this worse.
+
+* My First Attempts to Fix Things
+:PROPERTIES:
+:ID:       5faa9e85-b92b-4be7-8011-e0a933740d0e
+:END:
+
+- Started using the Nice British System.
+  - Final exam score would replace midterm scores.
+  - e.g. $s_{mt1} = max(s_{mt1},s_{final})$
+  - It's one way only.  (Someone always asks!)
+
+- With Prairielearn, I could do this by section!
+  - E.g., recursion section on the final could replace the recursion section on
+    midterm 1.
+
+* One Alternative --- Mastery Grading
+:PROPERTIES:
+:ID:       d878fa93-a70f-4a94-bfa4-de1b94c3740e
+:END:
+
+Common characteristics:
+
+- Credit is only given for "competency" level of achievement.
+  - Usually a "B" level
+- Multiple attempts are allowed per assessment
+  - Sometimes there are limits or tokens to spend
+  - (See [cite:@nilson2015])
+- Assessments are often "bundled".
+- Grade depends on the number of bundles or outcomes achieved, not necessarily number of problems solved.
+
+
+* Case Study: CS 421
+:PROPERTIES:
+:ID:       674440ab-f6df-4670-abb2-9e8918e99f08
+:END:
+
+- "Medium" sized class of 400
+- Mostly seniors, some juniors and grad students
+- Required for CS bachelors, often taken in the last semester.
+- I teach the language [[class:sc][Haskell]], often the first functional programming language our students have seen extensively.
+
+* Attempt 1 --- Fall 2021
+:PROPERTIES:
+:ID:       83616210-b0ac-461c-821b-13657dd14b37
+:END:
+
+- Step 1 --- Wrote down all the learning outcomes and categorized them into 20 "learning modules"
+
+Example: Learning Module 1 --- Recursion
+  - Outcomes
+    - 1.1)  Write a recursive function over integers (2 points)
+    - 1.2)  Write a mapping recursion over lists (2 points)
+    - 1.3)  Write a folding recursion over lists (2 points)
+    - 1.4)  Write a tail recursive function (2 points)
+    - 1.5)  Indicate the advantage of tail recursion over direct style (MC) (2 points)
+
+* Attempt 1, ctd
+:PROPERTIES:
+:ID:       adcfd6e2-fc98-42f7-b2d7-b1c15a6e6da1
+:END:
+
+- Step 2 --- Decide which assessments fulfill various outcomes.
+
+- Example: Outcome 1.4  Write a tail recursive function (2 points)
+  - Activity 1 (1 point)
+  - Exam 1, problem 3 (1 point)
+  - MP 3, part 1 (1 point)
+  - Final Exam, problem 3 (1 point)
+
+- Multiple assessments could contribute to fulfilling an outcome.
+  - Assessments allowed for multiple attempts, but no partial credit.
+
+* Attempt 1, grading scheme
+:PROPERTIES:
+:ID:       75b039fb-eb28-4cfa-a39b-a2f3b70d5e27
+:END:
+
+- A learning module (LM) was completed at 8/10 points.
+- Grade consists of number of learning modules and machine problems (MPs) completed.
+  - 18/20 LMs, 5/6 MPs = A
+  - 16/20 LMs, 4/6 MPs = B
+- A plus decoration was given for mis-matched levels.
+  - E.g., 18 LMs but 4 MPs would be a B+.
+
+* Attempt 2 -- Spring 2022
+:PROPERTIES:
+:ID:       7648b631-7f87-4e54-bd26-87f4d5741c91
+:END:
+
+- The concept of LMs was perpetually confusing, so:
+- Instead of counting learning modules, we counted the points of the outcomes.
+  - Each LM already had 10 points, so 180 points out of 200 was an A.
+  - Looks more like a traditional grading system.
+  - Mastery elements still retained.
+
+* Example Summary Report
+
+#+begin_src
+Summary:
+
+Fulfilled LMs        : 17 / 18
+Almost Fulfilled LMs : 0
+Outcome Points       : 173 / 180 (max 10 per LM)
+MPs Completed        : 6 / 6
+Attendance Count     : 24 / 25 (need 16)
+Tokens               : 1
+Calculated Grade: A
+
+Applying tokens...
+Fulfilled LMs        : 17 / 18
+Almost Fulfilled LMs : 0
+Outcome Points       : 175 / 180 (max 10 per LM)
+MPs Completed        : 6 / 6
+Attendance Count     : 24 / 25 (need 16)
+Tokens               : 0
+Applied token to Outcomes.
+Calculated Grade: A+
+#+end_src
+
+
+* Example LM Report
+
+#+begin_src
+LM 2: Algebraic Data Types (Completed)
+   2.1: Write datatype (2 points)
+        mp1 (2/2)
+   2.2: Consume datatype (2 points)
+        act2-adts (2/2)
+   2.3: Transform datatype (3 points)
+        exam1-q4 (3/3)
+        exam1-q4x2 (0/3)
+        exam1-q4xf (0/3)
+   2.4: Produce datatype (3 points)
+        mp1 (3/3)
+
+LM 12: Grammars
+   12.1: Demonstrate that a grammar is ambiguous (5 points)
+        act12-grammar (1/1)
+        exam2-q8 (0/4)
+        exam2-q8x3 (0/4)
+        exam2-q8xf (4/4)
+   12.2: Determine the FIRST and FOLLOW sets of a grammar (5 points)
+        act12-grammar (1/1)
+        exam2-q9 (0/4)
+        exam2-q9x3 (0/4)
+        exam2-q9xf (0/4)
+#+end_src
+
+* Results
+:PROPERTIES:
+:ID:       6c9632c3-9b69-416a-8cea-a8a3c92a1c89
+:END:
+
+#+ATTR_REVEAL: :frag t
+- Instructor horror: 1/3 of the outcomes were not being measured at all!
+  - This is common in a points-based economy where exams are a "stratified sample".
+  - Developed many new assessments to measure outcomes
+#+ATTR_REVEAL: :frag t
+- Student reaction mixed
+  - "The ones who got it"
+    - "I feel like I'm studying to learn now."
+    - "I know exactly what I need to study for the final"
+    - Reported much reduced stress
+#+ATTR_REVEAL: :frag t
+  - "The others"
+    - Uncertainty / unfamiliarity added to stress
+    - "Where are the learning modules?"
+
+* Results, crd.
+:PROPERTIES:
+:ID:       c9180d56-858e-43cd-a142-9285f4d7b981
+:END:
+- Other Outcomes
+  - Only 1 "point negotiation conversation" in two semesters.
+  - Sudden exodus after 10th learning module was completed!
+  - Grade distribution?
+  - Letters of recommendation are easier.
+    - Before: "they got an A"
+    - Now: "they demonstrated mastery in 18 of the 20 topics"
+
+* Plan for Next Iteration (Subject to Change!)
+:PROPERTIES:
+:ID:       1d2ee9be-4198-430f-a4f5-6734943465c4
+:END:
+
+- Will simplify assignment structure
+  - Long HW with multiple problems
+  - Single exam problem to verify learning
+
+Example: recursion problem
+- Homework will have three problems randomly selected from 10 or so.
+- Student passes when they get all three problems, gets three new ones otherwise
+- Single recursion problem on exam 1 and the final.
+
+- Will keep "learning modules" as a organizational principle only.
+
+* Lessons Learned
+:PROPERTIES:
+:ID:       9393c5e4-a9d9-4e69-a651-950cf16d21e9
+:END:
+
+- Conversion is time consuming.
+- Make sure communication is clear.
+- Students tend to buy in once they understand the system.
+  - And they tend to request it in future semesters.
+- Grades are much more meaningful.
+- Motivating survey participation is harder.  You can't pay them in points for participating!
+
+* Bibliography
+:PROPERTIES:
+:ID:       02986ac0-1048-46ac-a5fa-4f3a68fb9ad0
+:END:
+
+#+latex: \nocite{*}
+#+latex: \printbibliography[heading=none]
+
+* Questions?
+
+ - Mattox Beckman =<mattox@illinois.edu>=
+ - [[https://mattox.web.illinois.edu]]
+
+
+* End :noexport:
+;; Local Variables:
+;; eval: (add-hook 'after-save-hook  #'org-beamer-export-to-latex nil t)
+;; End:

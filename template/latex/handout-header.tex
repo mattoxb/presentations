@@ -1,0 +1,180 @@
+\usepackage[letterpaper,margin=0.5in]{geometry}
+
+\usepackage{titlesec}
+\usepackage{fontspec}
+
+\usepackage{newfile}
+
+% \defaultfontfeatures{Ligatures={TeX}}
+%\newfontfamily\mytextfont{Equity Text A}
+%\newfontfamily\mytitlefont{Concourse T3}
+%\newfontfamily\mytsc{Concourse C3}
+%\newfontfamily\mysc{Equity Caps A}
+
+\newfontfamily\mytitlefont{Equity Text A}
+\newfontfamily\mytextfont{Concourse T3}
+\newfontfamily\mysc{Concourse C3}
+\newfontfamily\mytsc{Equity Caps A}
+\setmonofont[Scale=0.86]{Inconsolata}
+
+\titleformat{\chapter}{\mytitlefont\huge}{\chaptertitlename\ \thechapter}{20pt}{\Huge}
+\titleformat{\section}{\mytitlefont\Large}{\thesection}{1em}{}
+\titleformat{\subsection}{\mytitlefont\large\bfseries}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}{\mytitlefont\normalsize\bfseries}{\thesubsubsection}{1em}{}
+\titleformat{\paragraph}[runin]{\mytextfont\normalsize\bfseries}{\theparagraph}{1em}{}
+
+\def\lang#1{{\mysc #1}}
+\def\tlang#1{{\mytsc #1}}
+
+\newcounter{thisexample}
+\setcounter{thisexample}{0}
+
+\newcounter{thisproblem}
+\setcounter{thisproblem}{0}
+
+\def\example{%
+  \addtocounter{thisexample}{1}%
+  \noindent\textbf{Example \arabic{thisexample})}
+}
+
+\def\problem{%
+  \addtocounter{thisproblem}{1}%
+  \noindent\textbf{Problem \arabic{thisproblem})}
+}
+
+\def\solution{%
+  \noindent\textbf{Solution \arabic{thisproblem})}
+}
+
+\newenvironment{backSolution}
+{\typeout{Creating file \jobname.sol.\arabic{thisproblem}}%
+\VerbatimOut{\jobname.sol.\arabic{thisproblem}}}
+{\endVerbatimOut}
+
+\def\showSolutions{
+   \section{Solutions to exercises}
+   \label{sec:solutions}
+
+   \foreach \x in {1,...,\arabic{questionCount}} {
+      \paragraph{Solution \x}
+
+      \input{\jobname.sol.\x}
+   }
+}
+\newcommand{\titleLine}{
+\hrule
+
+\mytitlefont
+
+\begin{center}
+  \begin{Large}
+    CS 421 --- \title \\
+  \end{Large}
+\end{center}
+
+\mytextfont
+
+\hrule
+
+\vskip 1em
+}
+
+
+\newcommand{\pogilLine}{
+\begin{Large}
+    \begin{tabular}{|l|l|p{3in}|} \hline
+        Manager & Keeps team on track & \\ \hline
+        Recorder & Records decisions & \\ \hline
+        Reporter & Reports to class & \\ \hline
+        Reflector & Assesses team performance & \\ \hline
+    \end{tabular}
+\end{Large}
+}
+
+\newcommand{\sii}{
+
+\hrule
+
+\mytitlefont
+
+\begin{center}
+\begin{Large}
+\title ~ --- Team's Assessment (SII) \\
+\end{Large}
+\end{center}
+
+\mytextfont
+
+\hrule
+
+\vskip 1em
+
+Manager or Reflector: Consider the objectives of this activity and your team's
+experience with it, and then answer the following questions after consulting
+with your team.
+
+\begin{enumerate}
+	\item What was a \textbf{strength} of this activity?  List one aspect that helped it
+  achieve its purpose.
+
+  \vfil
+
+\item What is one things we could do to \textbf{improve} this activity to make it more effective?
+
+  \vfil
+
+\item What \textbf{insights} did you have about the activity, either the content or at the meta level?
+ 
+\end{enumerate}
+}
+
+\newcommand{\reflector}{
+
+\hrule
+
+\mytitlefont
+
+\begin{center}
+\begin{Large}
+\title --- Reflector's Report \\
+\end{Large}
+\end{center}
+
+\mytextfont
+
+\hrule
+
+\vskip 1em
+
+\begin{Large}
+    \begin{tabular}{|l|l|p{3in}|} \hline
+        Manager & Keeps team on track & \\ \hline
+        Recorder & Records decisions & \\ \hline
+        Reporter & Reports to Class & \\ \hline
+        Reflector & Assesses team performance & \\ \hline
+    \end{tabular}
+\end{Large}
+
+\vskip 1em
+
+\begin{enumerate}
+\item What was a strength of your team's performance for this activity?
+
+  \vfil
+
+\item What could you do next time to increase your team's performance?
+
+  \vfil
+
+\item What insights did you have about the activity or your team's interaction
+    today?
+    
+\end{enumerate}
+
+\end{document}
+
+
+%%% Local Variables:
+%%% TeX-master: t
+%%% End:
+  }

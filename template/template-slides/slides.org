@@ -1,0 +1,13 @@
+#+TITLE: Office Hours
+#+SUBTITLE: Growing Students' Minds Without Losing Yours
+#+options: h:2
+#+LATEX_CLASS: beamer
+#+LATEX_CLASS_OPTIONS: [aspectration=169,xcolor={x11names},presentation]
+#+LATEX_HEADER: \input{slides-header.tex}
+
+
+* End :noexport:
+;; Local Variables:
+;; org-latex-listings: 'minted
+;; eval: (add-hook 'after-save-hook  #'org-beamer-export-to-latex nil t)
+;; End:

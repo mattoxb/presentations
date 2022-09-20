@@ -1,0 +1,34 @@
+#+subtitle: *CS 598 TL*
+#+title: *Assignment: Office Hours*
+#+options: toc:nil
+#+author:
+#+date:
+#+LATEX_HEADER: \input{handout-header.tex}
+
+** Learning Objective
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+
+
+Reflect on best practices in your own office hours situation.
+  
+** Prompt
+:PROPERTIES:
+:UNNUMBERED: t
+:END:
+
+
+- We discussed many things in class to make office hours effective, both from a course content perspective and from a human centered perspective.  Are there any ideas that we left out?  
+   - Give an example of a practice that we did not discuss. 
+   - Explain how you could implement this practice in your own office hours. 
+   - Explain how this practice will make your office hours more informative or more inviting for your students.
+- Think of an experience you had in office hours that made a strong impression on you, either good or bad.
+   - Describe your experience. 
+   - Suggest some practices you could adopt in your own office hours in light of that experience.  
+   - If you don't have any impressive office hour experiences of your own, feel free to use a story told to you by a fellow student. 
+
+* End :noexport:
+;; Local Variables:
+;; eval: (add-hook 'after-save-hook  #'org-export-to-latex nil t)
+;; End:

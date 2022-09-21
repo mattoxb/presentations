@@ -17,3 +17,5 @@ slides.tex
 *.xml
 handout.tex
 *.bbl
+*.pygtex
+*.pygstyle

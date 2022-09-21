@@ -144,7 +144,6 @@ The average is 25
 
 * End :noexport:
 ;; Local Variables:
-;; org-export-latex-listings: 'minted
-;; #org-latex-listings: 'minted
+;; org-latex-listings: 'minted
 ;; eval: (add-hook 'after-save-hook  #'org-beamer-export-to-latex nil t)
 ;; End:

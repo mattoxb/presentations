@@ -1,0 +1,181 @@
+#+TITLE: dic • tion • a • ries
+#+SUBTITLE: You gotta love them.
+#+DATE: Fall 2022
+#+options: h:2 toc:nil
+#+COLUMNS: %45ITEM %10BEAMER_ENV(Env) %10BEAMER_ACT(Act) %4BEAMER_COL(Col)
+#+LATEX_CLASS: beamer
+#+LATEX_CLASS_OPTIONS: [aspectration=169,xcolor={x11names},presentation]
+#+LATEX_HEADER: \input{slides-header.tex}
+
+* Introduction
+
+** Pro Tip
+
+Be careful to distinguish file names from variable names.
+In [[class:sc][Python]] a file name is always a string (text).
+
+- =open('foo.txt')=  ${\color{blue} Good}$
+- =name = 'foo.txt'= $\newline$
+  =open(name)=  ${\color{blue} Good}$
+- =open(foo.txt)=  ${\color{red} \mathrm{Bad.\  Don't\ do\ this.}}$
+
+** Objectives
+
+- Explain the difference between a dictionary and a list
+- Use a dictionary to create a quick phone book.
+- Use =for= loops to iterate over the contents of a dictionary.
+- Use complex objects as keys and dictionaries as values.
+- Use a list of list to create a matrix. (If there's time.)
+- Write your very own reverse phone-number lookup.
+
+* Dictionaries
+
+** Introducing Dictionaries
+
+*** Dictionaries
+
+- A /dictionary/ is a data structure that uses a /key/ to look up a /value/.
+- The lookup is very fast.
+- There is no real concept of order.
+
+*** Lists, in contrast
+
+- List elements have an integer index that will retrieve the value.
+- Lookup is fast, *if* you know the location already!
+- Order is built in to lists.
+
+
+** Motivating Example: A Phone Book
+
+- Suppose you wanted to make a phone book in [[class:sc][Python]].
+- Let's use lists:
+
+  #+begin_src python -n
+pb = [('Empire',5882300)
+     ,('Emergency',911)
+     ,('Jenny',8675309) ]
+
+def lookup(name):
+    for k,v in pb:   # k is for key, v is for value
+        if k == name:
+            return v
+  #+end_src
+
+- I have questions!
+
+** Dictionary Version
+
+- Now let's use dictionaries.
+
+  #+begin_src python -n
+pb = {'Empire':5882300
+     ,'Emergency':911
+     ,'Jenny':8675309 }
+
+def lookup(name):
+    return pb[name]
+  #+end_src
+
+- What do you think?
+
+** Creating a Dictionary Piecemeal
+
+- You can add to a dictionary a bit at a time.
+- Empty dictionary is represented as ={}=
+- Add using assignment:
+
+#+begin_src python -n
+pb = {}
+pb['Empire'] = '588-2300'
+pb['Emergency'] = '911'
+pb['Jenny'] = '867-5309'
+
+def rickRoll(pb):
+  pb['Rick Astley'] = "248-434-5508"
+  return pb
+
+pb = rickRoll(pb)
+#+end_src
+
+
+
+** Looping Over Dictionaries
+
+- Looping over a dictionary gives you the /keys/.
+
+#+begin_src python -n
+>>> for k in pb:
+...     print(k)
+...
+Empire
+Emergency
+Jenny
+
+>>> pb.keys()
+dict_keys(['Empire', 'Emergency', 'Jenny'])
+
+>>> pb.values()
+dict_values(['588-2300', '911', '867-5309'])
+#+end_src
+
+- What do you think the =dict_keys= and =dict_values=
+
+
+** Types in Dictionaries
+
+- The key and value of a dictionary can be almost any type!
+- Nesting dictionaries is a common technique to store hierarchical data.
+- Nobody will make you be consistent with the types
+     -  Use carefully, if at all!
+
+  #+begin_src python -n
+org = { 'Frodo': {'job':'Hold Ring', 'salary': 15000}
+      , 'Sam': {'job':'Gardener', 'salary': 200000}
+      , 'Gollum': {'job':'Pest', 'salary': 0}
+      , 'Pi': 3.14159}
+
+>>> org['Sam']['job']
+'Gardener'
+>>> 'Gollum' in org
+True
+  #+end_src
+
+** Your turn!
+
+- Write two functions to allow us to do reverse-number lookup.
+  - Write a function =invert(d)= that takes dictionary =d= and returns
+    a new one where the keys of =d= are the values of the new one.
+  - e.g. =invert({'x':10})= will return ={10:'x'}=
+
+- Write a function =rlookup(d,num)= that takes regular phone book =d=
+  and phone number =num= and returns the name using =invert=.
+
+  - This isn't very efficient, but we're just trying to play with dictionaries.
+
+#+begin_src python
+>>> pb
+{'Empire': '588-2300', 'Emergency': '911', 'Jenny': '867-5309'}
+>>> invert(pb)
+{'588-2300': 'Empire', '911': 'Emergency', '867-5309': 'Jenny'}
+>>> rlookup(pb,'911')
+'Emergency'
+#+end_src
+
+* Conclusion
+** Conclusion
+*** What you did
+- Explain the difference between a dictionary and a list
+- Use a dictionary to create a quick phone book.
+- Use =for= loops to iterate over the contents of a dictionary.
+- Use complex objects as keys and dictionaries as values.
+- Write your very own reverse phone-number lookup.
+*** Upcoming deadlines
+- Lesson 4, Lesson 5:  *Due Today*
+- HW 2: Due Monday, September 26.
+- All due times are at 22:00 Central.
+
+* End :noexport:
+;; Local Variables:
+;; org-latex-listings: 'minted
+;; eval: (add-hook 'after-save-hook  #'org-beamer-export-to-latex nil t)
+;; End:

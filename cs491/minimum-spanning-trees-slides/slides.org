@@ -1,0 +1,234 @@
+#+TITLE: Minimum Spanning Trees
+#+SUBTITLE: Connecting a Graph
+#+DATE: Fall, 2022
+#+options: h:2
+#+LATEX_CLASS: beamer
+#+LATEX_CLASS_OPTIONS: [aspectration=169,xcolor={x11names},presentation]
+#+LATEX_HEADER: \input{slides-header.tex}
+#+LATEX_HEADER: \pgfdeclarelayer{background}
+#+LATEX_HEADER: \pgfsetlayers{background,main}
+
+* Introduction
+** Objectives
+
+ - Define minimum spanning tree and explain its properties
+ - List some problems that MSTs solve
+ - Explain some variations of the MST
+ - Implement Kruscal's Algorithm
+
+* Minimum Spanning Trees
+** A Minimum Spanning Tree
+
+
+#+BEGIN_EXPORT latex
+\begin{center}
+  \begin{tikzpicture}[scale=1.5]
+    \tikzstyle{bun} = [draw=blue!90,fill=blue!10,circle,minimum size=20pt]
+    \tikzstyle{edge} = [draw=blue!90,thick,-]
+    \tikzstyle{seledge} = [draw=blue!50,line width=5pt,-]
+    \tikzstyle{ignedge} = [draw=black!10,line width=5pt,-]
+    \foreach \pos/\name in
+     {{(0,1)/a},
+      {(0,3)/b},
+      {(2,0)/c},
+      {(2,2)/d},
+      {(2,4)/e},
+      {(4,1)/f},
+      {(4,3)/g}}
+    \node[bun] (\name) at \pos {$\name$};
+    \foreach \src/\dst/\w in {a/b/2,a/c/4,a/d/10,b/d/11,b/e/6,e/d/5,e/g/2,g/d/9,g/f/3,f/d/12,f/c/7,c/d/8}
+       \path[edge] (\src) -- node[auto] {\w} (\dst);
+    \begin{pgfonlayer}{background}
+      \pause
+    \foreach \src/\dst/\w/\sty in {a/b/2/seledge,e/g/2/seledge,g/f/3/seledge,a/c/4/seledge,e/d/5/seledge,b/e/6/seledge,f/c/7/ignedge,c/d/8/ignedge,g/d/9/ignedge,a/d/10/ignedge,b/d/11/ignedge,f/d/12/ignedge}
+       \path[\sty] (\src) -- node[auto] {} (\dst);
+
+     \end{pgfonlayer}
+   \end{tikzpicture}
+   \end{center}
+   #+END_EXPORT
+
+** Properties of MSTs
+  - All connected graphs have one.
+  - May have more than one.
+  - $|E| = |V| - 1$
+  - Other tree properties hold...
+** Variations
+  - Maximum spanning tree
+  - ``minimum'' spanning subgraph
+  - Minimum spanning forest
+  - Second minimum spanning tree: Compute MST, then try again $|E|$ times, removing a different edge from the MST each time.
+  - In contests: this algorithm is easy, so contest problems will try to disguise the fact that MST will solve it.
+
+* Kruscal's Algorithm
+
+
+** Outline
+  - Insert all edges into a priority queue
+
+  - Initialize a disjoint set with all the edges
+  - While there are fewer than $|V|-1$ edges in your MST:
+    - Dequeue an edge.
+    - If the incident vertices are not both part of the MST already, add the
+      edge.  (Use the disjoint set to keep track)
+
+** Example Run
+
+#+BEGIN_EXPORT latex
+\begin{center}
+  \begin{tikzpicture}[scale=1.5]
+    \tikzstyle{bun} = [draw=blue!90,fill=blue!10,circle,minimum size=20pt]
+    \tikzstyle{edge} = [draw=blue!90,thick,-]
+    \tikzstyle{seledge} = [draw=blue!50,line width=5pt,-]
+    \tikzstyle{ignedge} = [draw=black!10,line width=5pt,-]
+    \foreach \pos/\name in
+    {{(0,1)/a},
+      {(0,3)/b},
+      {(2,0)/c},
+      {(2,2)/d},
+      {(2,4)/e},
+      {(4,1)/f},
+      {(4,3)/g}}
+    \node[bun] (\name) at \pos {$\name$};
+    \foreach \src/\dst/\w in {a/b/2,a/c/4,a/d/10,b/d/5,b/e/6,e/d/4,e/g/2,g/d/4,g/f/3,f/d/12,f/c/7,c/d/8}
+    \path[edge] (\src) -- node[auto] {\w} (\dst);
+    \begin{pgfonlayer}{background}
+      \pause
+      \foreach \src/\dst/\w/\sty in {{a/b/2/seledge},
+        {e/g/2/seledge},
+        {g/f/3/seledge},
+        {a/c/4/seledge},
+        {e/d/4/seledge},
+        {g/d/4/ignedge},
+        {b/d/5/seledge}} {
+        \pause
+        \path[\sty] (\src) -- node[auto] {} (\dst) ; };
+
+    \end{pgfonlayer}
+  \end{tikzpicture}
+  \end{center}
+  #+END_EXPORT
+
+** Code
+
+#+begin_src c++ -n
+vector< pair<int, ii> > EdgeList;
+for (int i = 0; i < E; i++) {
+   cin >> u >> v >> w;
+   EdgeList.push_back(make_pair(w, ii(u, v)));
+}
+sort(EdgeList.begin(), EdgeList.end());
+int mst_cost = 0;
+UnionFind UF(V);
+for (int i = 0; i < E; i++) {
+   pair<int, ii> front = EdgeList[i];
+   if (!UF.isSameSet(front.second.first
+                    ,front.second.second)) {
+      mst_cost += front.first;
+      UF.unionSet(front.second.first, front.second.second);
+} }
+#+end_src
+
+
+* Prim's Method
+** Idea
+
+- In Kruscal's algorithm, you add edges by order of weight.
+- In Prim's algorithm, you extend your current tree by adding a least-cost node.
+
+** Example Run
+
+#+BEGIN_EXPORT latex
+\begin{center}
+  \begin{tikzpicture}[scale=1.5]
+    \tikzstyle{bun} = [draw=blue!90,fill=blue!10,circle,minimum size=20pt]
+    \tikzstyle{sbun} = [draw=blue!90,fill=blue!30,circle,minimum size=23pt]
+    \tikzstyle{edge} = [draw=blue!90,thick,-]
+    \tikzstyle{seledge} = [draw=blue!50,line width=5pt,-]
+    \tikzstyle{ignedge} = [draw=black!10,line width=5pt,-]
+    \foreach \pos/\name in
+    {{(0,1)/a},
+      {(0,3)/b},
+      {(2,0)/c},
+      {(2,2)/d},
+      {(2,4)/e},
+      {(4,1)/f},
+      {(4,3)/g}}
+    \node[bun] (\name) at \pos {$\name$};
+    \foreach \src/\dst/\w in {a/b/2,a/c/4,a/d/10,b/d/5,b/e/6,e/d/4,e/g/2,g/d/4,g/f/3,f/d/12,f/c/7,c/d/8}
+    \path[edge] (\src) -- node[auto] {\w} (\dst);
+    \begin{pgfonlayer}{background}
+      \pause
+      \node[sbun] (sf) at (f) {f};
+
+      \foreach \src/\dst in {{f/g},
+                             {g/e},
+                             {g/d},
+                             {d/b},
+                             {b/a},
+                             {a/c}} {
+%        {b/d/5/seledge}} {
+        \pause
+        \node[sbun] (s\dst) at (\dst) {};
+        \path[seledge] (\src) -- node[auto] {} (\dst) ;
+      };
+    \end{pgfonlayer}
+  \end{tikzpicture}
+  \end{center}
+  #+END_EXPORT
+
+** Code from CP book 4
+
+#+begin_src c++ -n
+vector<vii> AL; // the graph stored in AL
+vi taken; // to avoid cycle
+priority_queue<ii> pq; // to select shorter edges
+// C++ STL priority_queue is a max heap, we use -ve sign to reverse order
+void process(int u) { // set u as taken and enqueue neighbors of u
+  taken[u] = 1;
+  for (auto &[v, w] : AL[u])
+    if (!taken[v]) pq.emplace(-w, -v); // sort by non-dec weight }
+}
+#+end_src
+
+** Code, part 2
+
+- in =main=, setting up...
+
+#+begin_src c++ -n
+int V, E;
+cin >> V >> E;
+AL.assign(V, vii());
+for (int i = 0; i < E; ++i) {
+  int u, v, w;
+  cin >> u >> v >> w; // read as (u, v, w)
+  AL[u].emplace_back(v, w); AL[v].emplace_back(u, w);
+ }
+taken.assign(V, 0); // no vertex is taken
+#+end_src
+
+** Code, part 3
+
+- The main loop
+
+#+begin_src c++ -n
+process(0); // take+process vertex 0
+int mst_cost = 0, num_taken = 0; // no edge has been taken
+while (!pq.empty()) { // up to O(E)
+  auto [w, u] = pq.top(); pq.pop(); // C++17 style
+  w = -w; u = -u; // negate to reverse order
+  if (taken[u]) continue; // already taken, skipped
+  mst_cost += w; // add w of this edge
+  process(u); // take+process vertex u
+  ++num_taken; // 1 more edge is taken
+  if (num_taken == V-1) break; // optimization
+ }
+cout << "MST cost = " << mst_cost << " (Prim’s)" << endl;
+
+#+end_src
+
+* End :noexport:
+;; Local Variables:
+;; org-latex-listings: minted
+;; eval: (add-hook 'after-save-hook  #'org-beamer-export-to-latex nil t)
+;; End:

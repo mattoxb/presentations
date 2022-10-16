@@ -1,0 +1,56 @@
+#+TITLE: Symbolics: Algebra
+#+SUBTITLE: There's a reason we give names to things, you know....
+#+DATE: Fall, 2022
+#+options: h:2 toc:nil
+#+LATEX_CLASS: beamer
+#+LATEX_CLASS_OPTIONS: [aspectration=169,xcolor={x11names},presentation]
+#+LATEX_HEADER: \input{slides-header.tex}
+
+* Introduction
+** Pro Tip
+
+- Computer programs sometimes last a lot longer than you think!
+
+- Comment your code so the next person to use it will be able to make sense of it.
+
+- You in two years might be the next person!
+
+** Objectives
+
+- Explain the difference between parameters and variables
+- Use =sympy= to do symbolic computation in [[class:sc][Python]]
+  - Today we'll stick to regular algebra; next time we'll try some calculus.
+- Commands to learn:
+  - =symbols=
+  - Simple Math
+  - =simplify=
+  - =expand=
+  - =together=
+  - =solve=
+  - =factor=
+  - =plot=
+
+
+* Symbols
+
+** SymPy
+
+- We will use [[https://sympy.org][Sympy]] to do symbolic computation in [[class:sc][Python]]
+- Similar goals to, e.g. Mathematica, but....
+  - It's free
+  - Completely written in Python
+  - "Lightweight"
+
+** Getting Started
+
+- You will import =sympy= like any other [[class:sc][Python]] library.
+
+  #+begin_src python
+import sympy
+  #+end_src
+
+* End :noexport:
+;; Local Variables:
+;; org-latex-listings: minted
+;; eval: (add-hook 'after-save-hook  #'org-beamer-export-to-latex nil t)
+;; End:

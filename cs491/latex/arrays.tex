@@ -1,0 +1,69 @@
+
+\tikzstyle{arraynode} = [
+        draw,
+        minimum size=1.2em,
+        alias=n\the\numexpr\pgfmatrixcurrentrow-2\relax\the\numexpr\pgfmatrixcurrentcolumn-2\relax
+        ]
+
+\tikzstyle{columnlabel} = [
+        minimum size=0pt,
+        draw=none,
+        red,
+        alias=c\the\numexpr\pgfmatrixcurrentcolumn-2\relax
+        ]
+\tikzstyle{rowlabel} = [
+        minimum size=0pt,
+        draw=none,
+        red,
+        alias=c\the\numexpr\pgfmatrixcurrentrow-2\relax
+        ]
+
+\tikzstyle{emptynode} = [node contents=~, draw=none]
+
+\tikzstyle{2darray} = [%
+        matrix of nodes,
+        nodes = arraynode,
+        column sep=-\pgflinewidth,
+        row sep=-\pgflinewidth,
+        nodes in empty cells,
+        row 1/.style={nodes=columnlabel},
+        column 1/.style={nodes=rowlabel},
+        row 1 column 1/.style={%
+            nodes=emptynode}]
+
+\tikzstyle{colarray} = [
+        matrix of nodes,
+        nodes = arraynode,
+        column sep=-\pgflinewidth,
+        row sep=-\pgflinewidth,
+        nodes in empty cells,
+        column 1/.style={nodes=columnlabel}
+        ]
+
+\tikzstyle{rowarray} = [
+        matrix of nodes,
+        nodes = arraynode,
+        column sep=-\pgflinewidth,
+        row sep=-\pgflinewidth,
+        nodes in empty cells,
+        row 1/.style={nodes=rowlabel}
+          ]
+
+\tikzstyle{memoryrow} = [%
+        matrix of nodes,
+        row 1/.style={nodes = {draw, minimum size=7mm}},
+        column sep=-\pgflinewidth,
+        row sep=-\pgflinewidth,
+        nodes in empty cells,
+        row 2/.style={nodes=rowlabel}]
+
+\tikzstyle{memory} = [%
+        matrix of nodes,
+        nodes={draw, minimum size=6mm, anchor=center},
+        row 1/.style={nodes = {columnlabel, black}},
+        column 1/.style={nodes = {rowlabel, black}},
+        row 1 column 1/.style={nodes = emptynode},
+        column sep=-\pgflinewidth,
+        row sep=-\pgflinewidth,
+        nodes in empty cells
+]

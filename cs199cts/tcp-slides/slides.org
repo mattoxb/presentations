@@ -1,0 +1,179 @@
+#+TITLE: Mini-lecture: TCP and the Internet
+#+SUBTITLE: Computational Technology and Society
+#+AUTHOR: Hannah Choi, Mattox Beckman
+#+DATE: Spring, 2023
+#+options: h:2 toc:nil
+#+LATEX_CLASS: beamer
+#+LATEX_CLASS_OPTIONS: [aspectration=169,xcolor={x11names},presentation]
+#+LATEX_HEADER: \input{slides-header.tex}
+#+LATEX_HEADER: \pgfdeclarelayer{background}
+#+LATEX_HEADER: \pgfsetlayers{background,main}
+#+BIBLIOGRAPHY: ../cs199cts.bib
+#+cite_export: csl ../latex/acm-siggraph.csl
+
+
+* Introduction
+** Objectives
+
+*** When this lecture is finished you will be able to
+
+- Explain the social/military problem TCP is intended to address
+- Explain the technical method TCP uses to accomplish these goals
+*** You will also want to read
+- [cite:@abbate1999]
+
+
+* Background
+** The Problem
+
+- note: expand on the cold war situation.  The kids didn't grow up in it. :)
+
+*** Background
+- Cold war era with US and USSR able to launch nuclear attack.
+- Initial strike would be likely to destroy communications.  What happens then?
+- Would "field commanders" be able to counterattack?
+  - No: first strike becomes more tempting.
+  - Yes: A sudden loss of communication could be mistakenly interpreted as a first strike.
+*** Solution
+- A survivable, high bandwidth communication system!
+
+** Telephone Style Communications
+
+- Source calls routed through local switch
+- Local switches route to national ("long distance") switches as necessary
+- Then routed to destination's local switch, then to the destination.
+
+- Each call has multiple single points of failure.
+
+#+BEGIN_EXPORT latex
+\begin{center}
+  \begin{tikzpicture}[scale=1.0]
+    \tikzstyle{bun} = [draw=blue!90,fill=blue!10,circle,minimum size=20pt]
+    \tikzstyle{sbun} = [draw=blue!90,fill=blue!30,circle,minimum size=23pt]
+    \tikzstyle{edge} = [draw=blue!90,thick,-]
+    \tikzstyle{seledge} = [draw=blue!50,line width=5pt,-]
+    \tikzstyle{ignedge} = [draw=black!10,line width=5pt,-]
+    \foreach \pos/\name in
+    {{(0,1)/s1},
+     {(0,2)/s2},
+     {(0,3)/s3},
+     {(2,2)/l1},
+     {(4,2)/n1},
+     {(6,2)/l2},
+     {(8,1)/d1},
+     {(8,2)/d2},
+     {(8,3)/d3}}
+    \node[bun] (\name) at \pos {$\name$};
+    \foreach \src/\dst in {s1/l1,s2/l1,s3/l1,l1/n1,n1/l2,l2/d1,l2/d2,l2/d3}
+       \path[edge] (\src) -- node[auto] {} (\dst);
+    \begin{pgfonlayer}{background}
+      \node[sbun] (ss1) at (s1) {};
+
+      \foreach \src/\dst in {{s1/l1},
+                             {l1/n1},
+                             {n1/l2},
+                             {l2/d3}} {
+%        {b/d/5/seledge}} {
+        \node[sbun] (s\dst) at (\dst) {};
+        \path[seledge] (\src) -- node[auto] {} (\dst) ;
+      };
+    \end{pgfonlayer}
+  \end{tikzpicture}
+  \end{center}
+  #+END_EXPORT
+** Packet Switching Communications
+
+- Communication is broken up into "packets"
+- Packets forwarded to one of *multiple* possible up-stream computers.
+  - These can hold the packets if necessary until a line is free.
+  - Can also pick a line that leads nearer to the destination.
+- Packets then flow like water --- underused lines get more traffic.
+  - Damaging a system will cause traffic to route around it.
+  - Rerouting did not require human intervention.
+
+#+BEGIN_EXPORT latex
+\begin{center}
+  \begin{tikzpicture}[scale=1.0]
+    \tikzstyle{bun} = [draw=blue!90,fill=blue!10,circle,minimum size=20pt]
+    \tikzstyle{sbun} = [draw=blue!90,fill=blue!30,circle,minimum size=23pt]
+    \tikzstyle{edge} = [draw=blue!90,thick,-]
+    \tikzstyle{seledge} = [draw=blue!50,line width=5pt,-]
+    \tikzstyle{ignedge} = [draw=black!10,line width=5pt,-]
+    \foreach \pos/\name in
+    {{(0,1)/s1},
+     {(0,2)/s2},
+     {(0,3)/s3},
+     {(4,1)/l1},
+     {(4,2)/n1},
+     {(4,3)/l2},
+     {(8,1)/d1},
+     {(8,2)/d2},
+     {(8,3)/d3}}
+    \node[bun] (\name) at \pos {$\name$};
+    \foreach \src/\dst in {s1/l2,s2/l2,s3/l2,s1/l1,s2/l1,s3/l1,s1/n1,s2/n1,s2/n1,s3/n1,l1/n1,n1/l2,n1/d1,n1/d2,n1/d3,l2/d1,l2/d2,l2/d3,l1/d1,l1/d2,l1/d3}
+       \path[edge] (\src) -- node[auto] {} (\dst);
+    \begin{pgfonlayer}{background}
+      \node[sbun] (ss1) at (s1) {};
+
+      \foreach \src/\dst in {{s1/l1},
+                             {s1/n1},
+                             {n1/l2},
+                             {l2/d3},
+                             {l1/d3}} {
+%        {b/d/5/seledge}} {
+        \node[sbun] (s\dst) at (\dst) {};
+        \path[seledge] (\src) -- node[auto] {} (\dst) ;
+      };
+    \end{pgfonlayer}
+  \end{tikzpicture}
+  \end{center}
+  #+END_EXPORT
+* Current Technology
+** TCP/IP
+
+- TCP = Transmission Control Protocol
+- IP = Internet Protocol
+
+*** A TCP Packet Contains
+
+- Source port
+- Destination port
+- Sequence number (to reassemble data later)
+- Error correction / detection information
+- and of course, the data
+
+
+** Implications
+
+- TCP is reliable
+  - Receiver acknowledges receipt of packet; they can be resent if necessary
+  - Each node (computer) picks the best route at the time
+  - Data can arrive at the destination out of order or delayed and still be used
+- But....
+  - The packet travels through many (dozens) of nodes from source to destination.
+  - They can be read, intercepted, possibly even changed.
+
+**  Discussion
+
+- What were the historical, technical, social, and political factors that influenced
+  the design of TCP?
+
+- What values were incorporated into the design of TCP?
+
+- If the military had not seen a need for TCP, would it have been invented anyway?
+
+- What if businesses had seen the need for TCP instead?
+
+
+* References
+
+** References
+
+#+print_bibliography:
+
+
+* End :noexport:
+;; Local Variables:
+;; org-latex-listings: minted
+;; eval: (add-hook 'after-save-hook  #'org-beamer-export-to-latex nil t)
+;; End:

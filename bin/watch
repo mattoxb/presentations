@@ -1,6 +1,6 @@
 #! zsh
 
 while true; do
-    inotifywait -e modify **/*.tex
+    inotifywait -e modify **/*.tex **/*.org
     build-slides
 done

@@ -1,0 +1,64 @@
+\mode<presentation>
+{
+  %% Beamer Layout %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \useoutertheme[subsection=false,shadow]{miniframes}
+  \useinnertheme{default}
+  % \setbeamercovered{transparent}
+  \setbeamercovered{invisible}
+
+}
+
+%\setbeamerfont{title like}{shape=\scshape}
+%\setbeamerfont{frametitle}{shape=\scshape}
+
+\definecolor{Blue4}{rgb}{0,0,.545}
+\definecolor{DeepSkyBlue4}{rgb}{0,.408,.545}
+
+\setbeamercolor*{lower separation line head}{bg=DeepSkyBlue4} 
+\setbeamercolor*{normal text}{fg=black,bg=white} 
+\setbeamercolor*{alerted text}{fg=red} 
+\setbeamercolor*{example text}{fg=black} 
+\setbeamercolor*{structure}{fg=Blue4} 
+ 
+\setbeamercolor*{palette tertiary}{fg=black,bg=black!10} 
+\setbeamercolor*{palette quaternary}{fg=black,bg=black!10} 
+
+\usepackage{fontspec}
+\usepackage{minted}
+\usemintedstyle{trac}
+
+\defaultfontfeatures{Ligatures={TeX}}
+\usefonttheme{serif}
+\setmainfont{Concourse T3}
+\newfontfamily\mytsc{Equity Caps A}
+\newfontfamily\mysc{Concourse C3}
+\setfontface{\textsc}{Concourse C3}
+\newfontfamily\titlefont{Equity Text A}
+
+\def\sc#1{{\textsc #1}}
+\usepackage[english]{babel}
+\usepackage{tikz}
+\input{venue}
+\input{code}
+
+\author{\titlefont \authorName}
+\institute[\shortInstitution]{
+  {\mysc \longInstitution \\
+  \longDepartment}
+}
+
+\date{} % \lectureDate}
+
+\bibliographystyle{alpha}
+
+\definecolor{bg}{rgb}{0.98,0.98,0.98}
+
+% \AtBeginSection[]
+% {
+%     \begin{frame}{Table of Contents}
+%         \tableofcontents[currentsection]
+%     \end{frame}
+% }
+
+\def\lang#1{{\mysc #1}}
+\def\tlang#1{{\mytsc #1}}

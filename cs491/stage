@@ -1,0 +1,1 @@
+cp $1/$1.pdf ~/class/cs491cap/web/static/slides/

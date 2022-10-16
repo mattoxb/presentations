@@ -1,0 +1,414 @@
+#+TITLE: Basic Graphs
+#+SUBTITLE: Representing Graphs and Union Find
+#+date: Fall, 2022
+#+options: h:2 toc:nil
+#+COLUMNS: %45ITEM %10BEAMER_ENV(Env) %10BEAMER_ACT(Act) %4BEAMER_COL(Col)
+#+LATEX_CLASS: beamer
+#+LATEX_CLASS_OPTIONS: [aspectration=169,xcolor={x11names},presentation]
+#+LATEX_HEADER: \input{slides-header.tex}
+#+LATEX_HEADER: \usetikzlibrary{graphs}
+#+LATEX_HEADER: \usetikzlibrary{overlay-beamer-styles, matrix, positioning}
+#+LATEX_HEADER: \input{arrays}
+#+LATEX: \def\z{\color{lightgray} 0}
+
+* Introduction
+
+** Objectives
+
+- Use three techniques to represent graphs in C++
+  - Adjacency Matrix
+  - Adjacency List
+  - Edge List
+- Use disjoint sets to check if a graph is bipartite
+
+** Vocabulary
+
+*** Some Properties
+    :PROPERTIES:
+    :BEAMER_COL: 0.48
+    :BEAMER_ENV: block
+    :END:
+
+- node/vertex, edge
+- loop
+- multigraph
+- path
+- connected
+- simple
+- directed / undirected
+- weighted / unweighted
+- degree
+
+*** Pretty Picture
+    :PROPERTIES:
+    :BEAMER_COL: 0.48
+    :BEAMER_ENV: block
+    :END:
+
+#+BEGIN_EXPORT latex
+\tikz [rounded corners, thick, draw=blue, ->, scale=0.7]
+{
+\node[circle,draw=blue] (q1) at (0,0) {$q_1$};
+\node[circle,draw=blue] (q2) at (3,0) {$q_2$};
+\node[circle,draw=blue] (q3) at (2.4,-2) {$q_3$};
+\node[circle,draw=blue] (q4) at (5,-2) {$q_4$};
+\node[circle,draw=blue] (q5) at (1,-4) {$q_5$};
+\node[circle,draw=blue] (q6) at (3,-4) {$q_6$};
+\node[circle,draw=blue] (q7) at (2,-6) {$q_7$};
+\node[circle,draw=blue] (q0) at (4,-6) {$q_0$};
+\draw (q1) edge[above] node {1} (q2)
+           edge[below] node {2} (q3)
+           edge[below] node [xshift=-5pt] {8} (q5);
+\draw (q2) edge[above] node [xshift=-5pt] {3} (q3)
+           edge[above] node {5} (q4);
+\draw (q4) edge[above] node {6} (q6);
+\draw (q6) edge[above] node [yshift=-3pt, xshift=4pt] {7} (q3);
+\draw (q7) edge[above] node {4} (q0);
+}
+#+END_export
+
+* Graph representation
+** Adjacency Matrix
+
+- For an adjacency matrix, we keep a 2-D array of the edges.
+
+*** Example Matrix
+    :PROPERTIES:
+    :BEAMER_COL: 0.48
+    :BEAMER_ENV: block
+    :END:
+
+#+BEGIN_EXPORT latex
+\begin{tikzpicture}[%
+    font=\ttfamily]
+
+\matrix[2darray,ampersand replacement=\&] (array) {
+  \& 0  \& 1  \& 2  \& 3  \& 4  \& 5  \& 6  \& 7 \\
+0 \& \z \& \z \& \z \& \z \& \z \& \z \& \z \& \z \\
+1 \& \z \& \z \&  1 \&  2 \& \z \&  8 \& \z \& \z \\
+2 \& \z \& \z \& \z \&  3 \&  5 \& \z \& \z \& \z \\
+3 \& \z \& \z \& \z \& \z \& \z \& \z \& \z \& \z \\
+4 \& \z \& \z \& \z \& \z \& \z \& \z \&  6 \& \z \\
+5 \& \z \& \z \& \z \& \z \& \z \& \z \& \z \& \z \\
+6 \& \z \& \z \& \z \&  7 \& \z \& \z \& \z \& \z \\
+7 \&  4 \& \z \& \z \& \z \& \z \& \z \& \z \& \z \\
+};
+
+\end{tikzpicture}
+#+END_EXPORT
+
+- Memory ${\cal O}(V^2)$, access ${\cal O}(1)$
+- Use for \emph{dense} graphs!
+
+*** Pretty Picture
+    :PROPERTIES:
+    :BEAMER_COL: 0.48
+    :BEAMER_ENV: block
+    :END:
+
+#+BEGIN_EXPORT latex
+\tikz [rounded corners, thick, draw=blue, ->, scale=0.7]
+{
+\node[circle,draw=blue] (q1) at (0,0) {$q_1$};
+\node[circle,draw=blue] (q2) at (3,0) {$q_2$};
+\node[circle,draw=blue] (q3) at (2.4,-2) {$q_3$};
+\node[circle,draw=blue] (q4) at (5,-2) {$q_4$};
+\node[circle,draw=blue] (q5) at (1,-4) {$q_5$};
+\node[circle,draw=blue] (q6) at (3,-4) {$q_6$};
+\node[circle,draw=blue] (q7) at (2,-6) {$q_7$};
+\node[circle,draw=blue] (q0) at (4,-6) {$q_0$};
+\draw (q1) edge[above] node {1} (q2)
+           edge[below] node {2} (q3)
+           edge[below] node [xshift=-5pt] {8} (q5);
+\draw (q2) edge[above] node [xshift=-5pt] {3} (q3)
+           edge[above] node {5} (q4);
+\draw (q4) edge[above] node {6} (q6);
+\draw (q6) edge[above] node [yshift=-3pt, xshift=4pt] {7} (q3);
+\draw (q7) edge[above] node {4} (q0);
+}
+#+END_export
+#
+# \matrix (first)
+# {
+# x & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 \\
+# };
+
+** Adjacency Matrix C++ Code
+
+- Assume we are reading the source, destination, and weight.
+
+#+begin_src C++ -n
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+  int v,a,b,w;
+
+  cin >> v; // Number of vertices
+
+  vector<vector<int>> g = vector(v,vector(v,0));
+
+  while (cin >> a >> b >> w)
+    g[a][b] = w;
+}
+#+end_src
+
+** Adjacency List
+
+- This is the most common representation
+- Memory ${\cal O}(V + E)$,
+- ${\cal O}(1)$ vertex access.
+- A good “default” implementation.
+
+#+BEGIN_EXPORT latex
+\begin{tikzpicture}[
+    font=\ttfamily
+]
+\matrix[colarray,ampersand replacement=\&] (array) {
+0 \\
+1 \&  2,1 \&  3,2 \&  5,8 \\
+2 \&  3,3 \&  4,5 \\
+3 \\
+4 \&  6,6 \\
+5 \\
+6 \&  3,7 \\
+7 \&  0,4 \\
+};
+\end{tikzpicture}
+#+END_EXPORT
+
+** Adjacency List C++ Code
+
+- Pair keeps destination and weight; use =vector<int>= for unweighted.
+
+#+begin_src C++ -n
+#include <bits/stdc++.h>
+using namespace std;
+
+typedef pair<int,int> pii;
+int main() {
+  int v,a,b,w;
+  cin >> v; // Number of vertices
+  vector<pii> g = vector(v):
+
+  while (cin >> a >> b >> w) {
+    g[a].push_back(pii(b,w));
+    g[b].push_back(pii(a,w)); // if undirected
+}}
+#+end_src
+
+** Edge List
+
+- Useful for Minimum Spanning Tree problems
+- Memory and access time ${\cal O}(E)$.
+
+#+BEGIN_EXPORT latex
+\begin{tikzpicture}[
+    font=\ttfamily
+]
+\matrix[colarray,ampersand replacement=\&] (array) {
+0 \& 1,2,1 \\
+1 \& 1,3,2 \\
+2 \& 1,5,8 \\
+3 \& 2,4,5 \\
+4 \& 4,6,6 \\
+4 \& 6,3,7 \\
+5 \& 7,0,4 \\
+};
+\end{tikzpicture}
+#+END_EXPORT
+
+** Edge List C++ Code
+
+- Triple keeps source, destination, and weight; use =vector<pair<int,int>>= for unweighted.
+
+#+begin_src C++
+#include <bits/stdc++.h>
+using namespace std;
+
+typedef tuple<int,int,int> tiii;
+int main() {
+  int v,a,b,w;
+  cin >> v; // Number of vertices
+  vector<tiii> g = vector(v):
+
+  while (cin >> a >> b >> w) {
+    g.push_back(tii(a,b,w)); // undirected
+}}
+#+end_src
+
+* Disjoint Sets
+
+** Remember UpTrees!
+
+- UpTrees (Disjoint Sets) keep track of transitive relations.
+- Each node gets an element in the array.
+- A non-negative number means the node is related to the other node.
+- A negative number means it's the root node.
+
+#+BEGIN_EXPORT latex
+\begin{tikzpicture}[
+    font=\ttfamily
+]
+\matrix[rowarray,ampersand replacement=\&] (array) {
+0 \& 1 \& 2 \& 3 \& 4 \& 5 \& 6 \& 7 \\
+-1 \& -1 \& -1 \& -1 \& -1 \& -1 \& -1 \& -1 \\
+};
+\end{tikzpicture}
+#+END_EXPORT
+
+** Our Example
+
+*** The matrix over time
+    :PROPERTIES:
+    :BEAMER_COL: 0.48
+    :BEAMER_ENV: block
+    :END:
+
+#+BEGIN_EXPORT latex
+\begin{tikzpicture}[
+    font=\ttfamily
+]
+\matrix[visible on=<{1,2}>, rowarray,ampersand replacement=\&] (array) {
+0 \& 1 \& 2 \& 3 \& 4 \& 5 \& 6 \& 7 \\
+-1 \& -1 \& -1 \& -1 \& -1 \& -1 \& -1 \& -1 \\
+};
+\matrix[visible on=<3>, rowarray,ampersand replacement=\&] (array) {
+0 \& 1 \& 2 \& 3 \& 4 \& 5 \& 6 \& 7 \\
+-1 \& {2} \& {-2} \& -1 \& -1 \& -1 \& -1 \& -1 \\
+};
+\matrix[visible on=<4>, rowarray,ampersand replacement=\&] (array) {
+0  \& 1 \&  2 \&  3 \&  4 \&  5 \&  6 \&  7 \\
+-1 \& 2 \& {-3} \&  {2} \& -1 \& -1 \& -1 \& -1 \\
+};
+\matrix[visible on=<5>, rowarray,ampersand replacement=\&] (array) {
+0  \& 1 \&  2 \&  3 \&  4 \&  5 \&  6 \&  7 \\
+-1 \& 2 \& {-4} \&  2 \& -1 \& {2} \& -1 \& -1 \\
+};
+\matrix[visible on=<6>, rowarray,ampersand replacement=\&] (array) {
+0  \& 1 \&  2 \&  3 \&  4 \&  5 \&  6 \&  7 \\
+-1 \& 2 \& -4 \&  2 \& -1 \&  2 \& -1 \& -1 \\
+};
+\matrix[visible on=<7>, rowarray,ampersand replacement=\&] (array) {
+0  \& 1 \&  2 \&  3 \&  4 \&  5 \&  6 \&  7 \\
+-1 \& 2 \& -5 \&  2 \&  2 \&  2 \& -1 \& -1 \\
+};
+\matrix[visible on=<8>, rowarray,ampersand replacement=\&] (array) {
+0  \& 1 \&  2 \&  3 \&  4 \&  5 \&  6 \&  7 \\
+-1 \& 2 \& -6 \&  2 \&  2 \&  2 \&  2 \& -1 \\
+};
+\matrix[visible on=<9>, rowarray,ampersand replacement=\&] (array) {
+0  \& 1 \&  2 \&  3 \&  4 \&  5 \&  6 \&  7 \\
+-2 \& 2 \& -6 \&  2 \&  2 \&  2 \&  2 \&  0 \\
+};
+\end{tikzpicture}
+#+END_EXPORT
+
+#+ATTR_BEAMER: :overlay +-
+- @@beamer:<{only@1}>@@ Start
+- @@beamer:<{only@2}>@@ Insert $q_1 \rightarrow q_2$
+- @@beamer:<{only@3}>@@ Insert $q_1 \rightarrow q_3$
+- @@beamer:<{only@4}>@@ Insert $q_1 \rightarrow q_5$
+- @@beamer:<{only@5}>@@ Insert $q_2 \rightarrow q_3$
+- @@beamer:<{only@6}>@@ Insert $q_2 \rightarrow q_4$
+- @@beamer:<{only@7}>@@ Insert $q_4 \rightarrow q_6$
+- @@beamer:<{only@8}>@@ Insert $q_6 \rightarrow q_3$
+- @@beamer:<{only@9}>@@ Insert $q_7 \rightarrow q_0$
+
+#+BEGIN_EXPORT latex
+\begin{tikzpicture}[
+    font=\ttfamily
+]
+\matrix[visible on=<2>, rowarray,ampersand replacement=\&] (array) {
+0 \& 1 \& 2 \& 3 \& 4 \& 5 \& 6 \& 7 \\
+-1 \& {\color{red} 2} \& {\color{red} -2} \& -1 \& -1 \& -1 \& -1 \& -1 \\
+};
+\matrix[visible on=<3>, rowarray,ampersand replacement=\&] (array) {
+0  \& 1 \&  2 \&  3 \&  4 \&  5 \&  6 \&  7 \\
+-1 \& 2 \& {\color{red} -3} \&  {\color{red} 2} \& -1 \& -1 \& -1 \& -1 \\
+};
+\matrix[visible on=<4>, rowarray,ampersand replacement=\&] (array) {
+0  \& 1 \&  2 \&  3 \&  4 \&  5 \&  6 \&  7 \\
+-1 \& 2 \& {\color{red} -4} \&  2 \& -1 \& {\color{red} 2} \& -1 \& -1 \\
+};
+\matrix[visible on=<5>, rowarray,ampersand replacement=\&] (array) {
+0  \& 1 \&  2 \&  3 \&  4 \&  5 \&  6 \&  7 \\
+-1 \& 2 \& -4 \&  2 \& -1 \&  2 \& -1 \& -1 \\
+};
+\matrix[visible on=<6>, rowarray,ampersand replacement=\&] (array) {
+0  \& 1 \&  2 \&  3 \&  4 \&  5 \&  6 \&  7 \\
+-1 \& 2 \& {\color{red} -5} \&  2 \& {\color{red} 2} \&  2 \& -1 \& -1 \\
+};
+\matrix[visible on=<7>, rowarray,ampersand replacement=\&] (array) {
+0  \& 1 \&  2 \&  3 \&  4 \&  5 \&  6 \&  7 \\
+-1 \& 2 \& {\color{red} -6} \&  2 \&  2 \&  2 \& {\color{red} 2} \& -1 \\
+};
+\matrix[visible on=<8>, rowarray,ampersand replacement=\&] (array) {
+0  \& 1 \&  2 \&  3 \&  4 \&  5 \&  6 \&  7 \\
+-1 \& 2 \& -6 \&  2 \&  2 \&  2 \& 2 \& -1 \\
+};
+\matrix[visible on=<9>, rowarray,ampersand replacement=\&] (array) {
+0  \& 1 \&  2 \&  3 \&  4 \&  5 \&  6 \&  7 \\
+{\color{red} -2} \& 2 \& -6 \&  2 \&  2 \&  2 \&  2 \&  {\color{red} 0} \\
+};
+\end{tikzpicture}
+#+END_EXPORT
+
+*** Pretty Picture
+    :PROPERTIES:
+    :BEAMER_COL: 0.48
+    :BEAMER_ENV: block
+    :END:
+
+#+BEGIN_EXPORT latex
+\tikz [rounded corners, thick, background default draw={blue}, draw=blue, ->, scale=0.7]
+{
+\node[circle,draw=blue] (q1) at (0,0) {$q_1$};
+\node[circle,draw=blue] (q2) at (3,0) {$q_2$};
+\node[circle,draw=blue] (q3) at (2.4,-2) {$q_3$};
+\node[circle,draw=blue] (q4) at (5,-2) {$q_4$};
+\node[circle,draw=blue] (q5) at (1,-4) {$q_5$};
+\node[circle,draw=blue] (q6) at (3,-4) {$q_6$};
+\node[circle,draw=blue] (q7) at (2,-6) {$q_7$};
+\node[circle,draw=blue] (q0) at (4,-6) {$q_0$};
+\draw (q1) edge[above,background draw={red},draw on=<2>] node {1} (q2)
+           edge[below,background draw={red},draw on=<3>] node {2} (q3)
+           edge[below,background draw={red},draw on=<4>] node [xshift=-5pt] {8} (q5);
+\draw (q2) edge[above,background draw={red},draw on=<5>] node [xshift=-5pt] {3} (q3)
+           edge[above,background draw={red},draw on=<6>] node {5} (q4);
+\draw (q4) edge[above,background draw={red},draw on=<7>] node {6} (q6);
+\draw (q6) edge[above,background draw={red},draw on=<8>] node [yshift=-3pt, xshift=4pt] {7} (q3);
+\draw (q7) edge[above,background draw={red},draw on=<9>] node {4} (q0);
+}
+#+END_export
+
+** Code
+
+#+begin_src c++ -n
+int find(int a, vi &uptree) {
+  if (uptree[a] < 0)
+    return a;
+  else
+    return uptree[a] = find(uptree[a],uptree);
+}
+
+int add(int a, int b, vi &uptree) {
+  int aa = find(a,uptree);
+  int bb = find(b,uptree);
+
+  if (aa < bb) {   # aa tree is bigger
+      uptree[aa] += uptree[bb];
+      uptree[bb] = aa
+  } else {
+      uptree[bb] += uptree[aa];
+      uptree[aa] = bb
+  }
+}
+#+end_src
+
+
+* End :noexport:
+;; Local Variables:
+;; org-latex-listings: minted
+;; eval: (add-hook 'after-save-hook  #'org-beamer-export-to-latex nil t)
+;; End:

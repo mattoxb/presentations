@@ -172,7 +172,7 @@ True
 *** Upcoming deadlines
 - Lesson 4, Lesson 5:  *Due Today*
 - HW 2: Due Monday, September 26.
-- All due times are at 22:00 Central.
+- Project Progress Report 1, September 30
 
 * End :noexport:
 ;; Local Variables:

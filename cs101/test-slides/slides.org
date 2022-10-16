@@ -5,6 +5,14 @@
 #+LATEX_CLASS_OPTIONS: [aspectration=169,xcolor={x11names},presentation]
 #+LATEX_HEADER: \input{slides-header.tex}
 
+* Test
+** A test slide!
+
+#+begin_src python -n
+def foo():
+    print("Hello")
+
+#+end_src
 
 * End :noexport:
 ;; Local Variables:

@@ -1,0 +1,242 @@
+#+TITLE: Graph Traversals, Part 2
+#+SUBTITLE: Traversal-Based Algorithms
+#+options: h:2 toc:nil
+#+date: Fall, 2022
+#+LATEX_CLASS: beamer
+#+LATEX_CLASS_OPTIONS: [aspectration=169,xcolor={x11names},presentation]
+#+LATEX_HEADER: \input{slides-header.tex}
+#+LATEX_HEADER: \usetikzlibrary{calc}
+#+LATEX_HEADER: \pgfdeclarelayer{background}
+#+LATEX_HEADER: \pgfsetlayers{background,main}
+
+* Introduction
+** Objectives
+
+We will use DFS to ...
+
+  - check if a graph is bipartite
+  - find articulation points
+  - find bridges (cut edges)
+  - see if a graph has cycles
+  - find strongly connected components
+
+* Algorithms
+** Bipartite Graphs
+
+*** ~
+:PROPERTIES:
+:BEAMER_COL: 0.7
+:END:
+
+    - Also called 2-coloring
+    - Use either BFS or DFS
+    - Start root with color 0
+    - Color each direct neighbor color 1 \\
+      For vertex =u= use =1 - color[u]= for neighbors.
+
+    - Recurse / Enqueue
+
+    - If you find an already visited neighbor with the same color as the
+      parent, the graph is not bipartite.
+
+*** ~
+:PROPERTIES:
+:BEAMER_COL: 0.3
+:END:
+
+#+BEGIN_EXPORT latex
+\begin{tikzpicture}
+\tikzstyle{bln} = [draw=black!90,circle,minimum size=20pt]
+\tikzstyle{bun} = [draw=blue!90,fill=blue!10,circle,minimum size=20pt]
+\tikzstyle{grn} = [draw=green!90,fill=green!10,circle,minimum size=20pt]
+\tikzstyle{tbln} = [style=very thick,draw=black!90,circle,minimum size=20pt]
+\tikzstyle{tbun} = [style=very thick,draw=blue!90,fill=blue!20,circle,minimum size=20pt]
+\tikzstyle{tgrn} = [style=very thick,draw=green!90,fill=green!20,circle,minimum size=20pt]
+\tikzstyle{seledge} = [draw=blue!20,line width=5pt,-]
+\foreach \pos/\name/\sty/\col in {{(0,1)/a/bln/-},{(0,3)/b/bln/-},{(0,5)/c/bln/-},{(2,0)/d/bln/-},{(2,2)/e/bln/-},{(2,4)/f/bln/-},{(2,6)/g/bln/-}}
+   \node[\sty] (\name) at \pos {$\name^\col$};
+\foreach \src/\dst in {a/g,b/g,c/g,b/f,a/f,d/c,d/a,c/e}
+   \draw (\src) -- (\dst);
+\pause
+\node[tgrn] (sa) at (a) {$a^0$};
+\foreach \src/\dst/\sty/\n in {{a/g/tbun/1},
+   {g/c/tgrn/0},{c/e/tbun/1},{c/d/tbun/1},{g/b/tgrn/0},{b/f/tbun/1}}  {
+   \pause
+   \node[\sty] (s\dst) at (\dst) {$\dst^\n$};
+      \path[seledge] (\src) -- node[auto] {} (\dst) ;
+      \draw (\src) -- (\dst);
+};
+\end{tikzpicture}
+#+END_EXPORT
+
+** Detecting Cycles
+
+*** Algorithm
+:PROPERTIES:
+:BEAMER_COL: 0.6
+:END:
+
+- Nodes have three states
+  - Unvisited
+  - Explored -- entered but not finished
+  - Visited
+- Edge Types
+  - Explored $\rightarrow$ Unvisited: Parent discovers new child
+  - Explored $\rightarrow$ Visited:    A forward or cross edge
+  - Explored $\rightarrow$ Explored:   A back edge / cycle
+
+*** Graph
+:PROPERTIES:
+:BEAMER_COL: 0.4
+:END:
+#+BEGIN_EXPORT latex
+\begin{tikzpicture}
+  \tikzstyle{bln} = [draw=black!90,circle,minimum size=20pt]
+  \tikzstyle{bun} = [draw=blue!90,fill=blue!10,circle,minimum size=20pt]
+  \tikzstyle{grn} = [draw=green!90,fill=green!10,circle,minimum size=20pt]
+  \tikzstyle{tbln} = [style=thick,draw=black!90,circle,minimum size=20pt]
+  \tikzstyle{tbun} = [style=thick,draw=blue!90,fill=blue!10,circle,minimum size=20pt]
+  \tikzstyle{tgrn} = [style=thick,draw=green!90,fill=green!10,circle,minimum size=20pt]
+  \foreach \pos/\name/\sty/\t in
+  {{(0,0)/a/bln/U},
+   {(0,2)/b/bln/U},
+   {(0,4)/c/bln/U},
+   {(2,0)/d/bln/U},
+   {(2,2)/e/bln/U},
+   {(4,2)/f/bln/U}}
+  \node[\sty] (\name) at \pos {$\name^{~\t}$};
+  \foreach \src/\dst in {a/d,a/b,b/c,b/e,d/e,e/f,f/d}
+     \draw[->] (\src) -- (\dst);
+  \pause
+  \node[tgrn] (sa) at (a) {$a^{~E}$};
+  \foreach \src/\dst/\sty/\t in {{a/b/tgrn/E},
+  {b/c/tgrn/E},
+  {b/c/tbun/V},
+  {b/e/tgrn/E},
+  {e/f/tgrn/E},
+  {f/d/tgrn/E},
+  {f/d/tbun/V},
+  {e/f/tbun/V},
+  {b/e/tbun/V},
+  {a/b/tbun/V}} {
+  \pause
+  \draw[->] (\src) -- (\dst);
+  \node[\sty] (s\dst) at (\dst) {$\dst^{~\t}$};
+  };
+  \pause
+  \node[tbun] (sa) at (a) {$a^{~V}$};
+
+\end{tikzpicture}
+#+END_EXPORT
+
+** Cut Edges
+*** ~
+:PROPERTIES:
+:BEAMER_COL: 0.5
+:END:
+
+#+BEGIN_EXPORT latex
+\begin{tikzpicture}[scale=0.75]
+\tikzstyle{bln} = [draw=black!90,circle,minimum size=20pt]
+\tikzstyle{bun} = [draw=blue!90,fill=blue!10,circle,minimum size=20pt]
+\tikzstyle{tgrn} = [style=thick,draw=green!90,circle,minimum size=20pt]
+\tikzstyle{tbun} = [style=thick,draw=blue!90,circle,minimum size=20pt]
+\foreach \pos/\name/\num/\low in
+ {{(0,0)/a/0/0},
+  {(0,4)/b/1/0},
+  {(2,2)/c/2/0},
+  {(4,2)/d/3/3},
+  {(6,4)/f/4/3},
+  {(6,0)/e/5/3}}
+\node[bln] (\name) at \pos {$\name$};
+\foreach \src/\dst in {a/b,a/c,b/c,c/d,d/f,f/e,e/d}
+\draw (\src) -- (\dst);
+\foreach \n/\sty/\up/\down in {{a/tgrn/0/-1},
+   {b/tgrn/1/~},
+   {c/tgrn/2/~},
+   {c/tbun/2/0},
+   {d/tgrn/3/~},
+   {f/tgrn/4/~},
+   {e/tgrn/5/~},
+   {e/tbun/5/3},
+   {f/tbun/4/3},
+   {d/tbun/3/3},
+   {b/tbun/1/0},
+   {a/tbun/0/0}} {
+\pause
+\node[\sty] (s\n) at (\n) {};
+\node (mu\n) at ($ (\n) + (0.25,0.60) $) {\up};
+\node (mu\n) at ($ (\n) + (0.25,-0.60) $) {\down};
+};
+\end{tikzpicture}
+#+END_EXPORT
+
+
+*** ~
+:PROPERTIES:
+:BEAMER_COL: 0.5
+:END:
+
+- Superscript = =dfs_num=
+- Subscript = =dfs_low=
+
+- If =dfs_low[u] < dfs_num[u]=, then =u= belongs to a cycle.
+- If =dfs_low[v] >= dfs_num[u]=, then =u= is a cut node.
+- If =dfs_low[v] > dfs_num[u]=, then =u-v= is a cut edge.
+
+** Strongly Connected Components
+*** ~
+:PROPERTIES:
+:BEAMER_COL: 0.5
+:END:
+
+#+BEGIN_EXPORT latex
+\begin{tikzpicture}[scale=0.75]
+\tikzstyle{bln} = [draw=black!90,circle,minimum size=20pt]
+\tikzstyle{bun} = [draw=blue!90,fill=blue!10,circle,minimum size=20pt]
+\tikzstyle{tgrn} = [style=thick,draw=green!90,circle,minimum size=20pt]
+\tikzstyle{tbun} = [style=thick,draw=blue!90,circle,minimum size=20pt]
+\foreach \pos/\name/\num/\low in
+ {{(0,0)/a/0/0},
+  {(0,4)/b/1/0},
+  {(2,2)/c/2/0},
+  {(4,2)/d/3/3},
+  {(6,4)/f/4/3},
+  {(6,0)/e/5/3}}
+\node[bln] (\name) at \pos {$\name$};
+\foreach \src/\dst in {a/b,a/c,b/c,c/d,d/f,f/e,e/d}
+\draw[->] (\src) -- (\dst);
+\foreach \n/\sty/\up/\down in {{a/tgrn/0/~},
+   {b/bln/1/~},
+   {c/bln/2/~},
+   {c/bln/2/2},
+   {d/bln/3/~},
+   {f/bln/4/~},
+   {e/bln/5/~},
+   {e/bln/5/3},
+   {f/bln/4/3},
+   {d/tbun/3/3},
+   {b/bln/1/1},
+   {a/tbun/0/0}} {
+\node[\sty] (s\n) at (\n) {};
+\node (mu\n) at ($ (\n) + (0.25,0.60) $) {\up};
+\node (mu\n) at ($ (\n) + (0.25,-0.60) $) {\down};
+};
+\end{tikzpicture}
+#+END_EXPORT
+
+*** ~
+:PROPERTIES:
+:BEAMER_COL: 0.5
+:END:
+
+- Superscript = =dfs_num=
+- Subscript = =dfs_low=
+- If =dfs_low[u] = dfs_num[u]=, then we have the root of a SCC.
+
+
+* End :noexport:
+;; Local Variables:
+;; org-latex-listings: minted
+;; eval: (add-hook 'after-save-hook  #'org-beamer-export-to-latex nil t)
+;; End:

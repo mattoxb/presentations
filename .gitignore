@@ -19,3 +19,4 @@ handout.tex
 *.bbl
 *.pygtex
 *.pygstyle
+.direnv/
